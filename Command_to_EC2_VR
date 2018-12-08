@@ -1,0 +1,1 @@
+ssh -i 'c:\LinuxAWSInstantKeyPair.pem' ec2-user@34.213.78.251
