@@ -51,7 +51,7 @@ class ExmoExchange:
         last_trades_list = [f'Последние сделки в паре {sell_coin}/{buy_coin}']
         ind = 1
         for item in r.json()['data']['items'][::-1]:
-            if ind > limit:
+            if ind > int(limit):
                 break
             date = datetime.utcfromtimestamp(int(item['date'])).strftime('%Y-%m-%d %H:%M:%S')
             ttype, quantity, price, amount = item['type'], item['quantity'], item['price'], item['amount']
