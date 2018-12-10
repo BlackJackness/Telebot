@@ -17,8 +17,8 @@ def get_timestamp_format(date_from_format, date_to_format, format):
             '%Y-%m-%d %H:%M:%S')
     if date_to_format is None:
         date_to_format = datetime.utcfromtimestamp(int(time.time()) - time.timezone).strftime('%Y-%m-%d %H:%M:%S')
-    date_from = int(time.mktime(datetime.strptime(date_from_format, format).timetuple())) + time.timezone
-    date_to = int(time.mktime(datetime.strptime(date_to_format, format).timetuple())) + time.timezone
+    date_from = int(time.mktime(datetime.strptime(date_from_format, format).timetuple()))
+    date_to = int(time.mktime(datetime.strptime(date_to_format, format).timetuple()))
     return date_from, date_to, date_from_format, date_to_format
 
 
@@ -35,21 +35,19 @@ class BinanceExchange:
                     format='%Y-%m-%d %H:%M:%S'):
         date_from, date_to, date_from_format, date_to_format = get_timestamp_format(date_from_format, date_to_format,
                                                                                     format)
-        number_of_upload = ceil((date_to - date_from) / BINANCE_UPLOAD_CONST)
-        candles = []
-        for interval in range(1, number_of_upload + 1):
-            r = requests.get(
-                f'https://www.binance.com/api/v1/klines?symbol={sell_coin}{buy_coin}&interval=1m&endTime={(date_from + BINANCE_UPLOAD_CONST*interval) * 1000}')
-            candles += r.json()
+        r = requests.get(
+            f'https://www.binance.com/api/v1/klines?symbol={sell_coin}{buy_coin}&interval=1m&startTime={date_from*1000}&endTime={date_to*1000}')
         opened = []
         high = []
         low = []
         close = []
         xdate = []
-        for item in candles:
-            candle_time = int(item[0]) // 1000 - time.timezone
+        for item in r.json():
+            candle_time = int(item[0]) // 1000
             if candle_time < date_from:
                 continue
+            if candle_time > date_to:
+                break
             opened.append(float(item[1]))
             high.append(float(item[2]))
             low.append(float(item[3]))
