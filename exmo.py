@@ -65,7 +65,7 @@ class ExmoExchange:
         date_from, date_to, date_from_format, date_to_format = get_timestamp_format(date_from_format, date_to_format,
                                                                                     format)
         r = requests.get(
-            f'https://exmo.me/ctrl/chart/history?symbol={sell_coin}_{buy_coin}&resolution=30&from={date_from}&to={date_to}',
+            f'https://exmo.me/ctrl/chart/history?symbol={sell_coin}_{buy_coin}&resolution=1&from={date_from}&to={date_to}',
             headers=exmo_headers)
         opened = []
         high = []
