@@ -14,12 +14,12 @@ SEC_PER_DAY = 24 * 3600
 
 def get_timestamp_format(date_from_format, date_to_format, format):
     if date_from_format is None:
-        date_from_format = datetime.utcfromtimestamp(int(time.time()) - SEC_PER_DAY).strftime(
+        date_from_format = datetime.utcfromtimestamp(int(time.time()) - SEC_PER_DAY - time.timezone).strftime(
             '%Y-%m-%d %H:%M:%S')
     if date_to_format is None:
-        date_to_format = datetime.utcfromtimestamp(int(time.time())).strftime('%Y-%m-%d %H:%M:%S')
-    date_from = int(time.mktime(datetime.strptime(date_from_format, format).timetuple()))
-    date_to = int(time.mktime(datetime.strptime(date_to_format, format).timetuple()))
+        date_to_format = datetime.utcfromtimestamp(int(time.time()) - time.timezone).strftime('%Y-%m-%d %H:%M:%S')
+    date_from = int(time.mktime(datetime.strptime(date_from_format, format).timetuple())) + time.timezone
+    date_to = int(time.mktime(datetime.strptime(date_to_format, format).timetuple())) + time.timezone
     return date_from, date_to, date_from_format, date_to_format
 
 
@@ -53,7 +53,7 @@ class ExmoExchange:
         for item in r.json()['data']['items'][::-1]:
             if ind > int(limit):
                 break
-            date = datetime.utcfromtimestamp(int(item['date'])).strftime('%Y-%m-%d %H:%M:%S')
+            date = datetime.utcfromtimestamp(int(item['date']) - time.timezone).strftime('%Y-%m-%d %H:%M:%S')
             ttype, quantity, price, amount = item['type'], item['quantity'], item['price'], item['amount']
             last_trades_list += [
                 f"\t{ind}. {date} {ttype} {quantity} {sell_coin} for {amount} {buy_coin} were price was {price}"]
