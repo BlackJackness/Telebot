@@ -13,10 +13,10 @@ BINANCE_UPLOAD_CONST = 30000
 
 def get_timestamp_format(date_from_format, date_to_format, format):
     if date_from_format is None:
-        date_from_format = datetime.utcfromtimestamp(int(time.time()) - SEC_PER_DAY - time.timezone).strftime(
+        date_from_format = datetime.utcfromtimestamp(int(time.time()) - SEC_PER_DAY).strftime(
             '%Y-%m-%d %H:%M:%S')
     if date_to_format is None:
-        date_to_format = datetime.utcfromtimestamp(int(time.time()) - time.timezone).strftime('%Y-%m-%d %H:%M:%S')
+        date_to_format = datetime.utcfromtimestamp(int(time.time())).strftime('%Y-%m-%d %H:%M:%S')
     date_from = int(time.mktime(datetime.strptime(date_from_format, format).timetuple()))
     date_to = int(time.mktime(datetime.strptime(date_to_format, format).timetuple()))
     return date_from, date_to, date_from_format, date_to_format
