@@ -13,12 +13,12 @@ BINANCE_UPLOAD_CONST = 30000
 
 def get_timestamp_format(date_from_format, date_to_format, format):
     if date_from_format is None:
-        date_from_format = datetime.utcfromtimestamp(int(time.time()) - SEC_PER_DAY).strftime(
+        date_from_format = datetime.utcfromtimestamp(int(time.time()) - SEC_PER_DAY - time.timezone).strftime(
             '%Y-%m-%d %H:%M:%S')
     if date_to_format is None:
-        date_to_format = datetime.utcfromtimestamp(int(time.time())).strftime('%Y-%m-%d %H:%M:%S')
-    date_from = int(time.mktime(datetime.strptime(date_from_format, format).timetuple()))
-    date_to = int(time.mktime(datetime.strptime(date_to_format, format).timetuple()))
+        date_to_format = datetime.utcfromtimestamp(int(time.time()) - time.timezone).strftime('%Y-%m-%d %H:%M:%S')
+    date_from = int(time.mktime(datetime.strptime(date_from_format, format).timetuple())) + time.timezone
+    date_to = int(time.mktime(datetime.strptime(date_to_format, format).timetuple())) + time.timezone
     return date_from, date_to, date_from_format, date_to_format
 
 
@@ -52,7 +52,7 @@ class BinanceExchange:
             high.append(float(item[2]))
             low.append(float(item[3]))
             close.append(float(item[4]))
-            xdate.append(datetime.fromtimestamp(candle_time))
+            xdate.append(datetime.fromtimestamp(candle_time - time.timezone))
         fig, ax = plt.subplots()
         ax.set_xlabel('Date')
         ax.set_ylabel(f'One {sell_coin} in {buy_coin}')
