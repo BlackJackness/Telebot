@@ -46,7 +46,7 @@ class ExmoExchange:
     Значит,при продаже {number} {sell_coin} вы получите {change_result} {buy_coin}'''
 
     def last_trades(self, sell_coin, buy_coin='USD', limit=10):
-        limit = min(10,limit)
+        limit = min(int(limit),10)
         r = requests.post('https://exmo.me/ctrl/trades', data=json.dumps({'pair': f"{sell_coin}_{buy_coin}"}),
                           headers=exmo_headers)
         last_trades_list = [f'Последние сделки в паре {sell_coin}/{buy_coin}']
