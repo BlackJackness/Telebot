@@ -77,6 +77,7 @@ class BinanceExchange:
         return f'{hash_name}.png'
 
     def last_trades(self, sell_coin, buy_coin='USDT', limit=20):
+        limit = min(limit,20)
         r = requests.get(f'https://www.binance.com/api/v1/aggTrades?limit={limit}&symbol={sell_coin}{buy_coin}')
         last_trades_list = [f'Последние сделки в паре {sell_coin}/{buy_coin}']
         ind = 1
